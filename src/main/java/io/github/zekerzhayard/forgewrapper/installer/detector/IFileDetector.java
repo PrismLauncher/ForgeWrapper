@@ -179,14 +179,24 @@ public interface IFileDetector {
             // Check all cached libraries.
             boolean checked = true;
             for (Map.Entry<String, Path> entry : libsMap.entrySet()) {
-                checked = checkExtraFile(entry.getValue(), hashMap.get(entry.getKey() + "_SHA"));
+                String sha1 = "";
+                String entryKey = entry.getKey();
+                /**
+                 * NOTE: workaround for https://github.com/MultiMC/Launcher/issues/4400
+                 * We ignore the hash of the client file and instead just rely on it being 'correct, maybe' if it's present at all
+                 */
+                System.out.println("Checking: " + entryKey);
+                if(!entryKey.equals("PATCHED")) {
+                    sha1 = hashMap.get(entryKey + "_SHA");
+                }
+                checked = checkExtraFile(entry.getValue(), sha1);
                 if (!checked) {
                     System.out.println("Missing: " + entry.getValue());
                     break;
                 }
             }
             return checked;
-        }
+            }
         // Skip installing process if installer profile doesn't exist.
         return true;
     }
@@ -198,7 +208,13 @@ public interface IFileDetector {
      * @return True represents the file is ready.
      */
     static boolean checkExtraFile(Path path, String sha1) {
-        return sha1 == null || sha1.equals("") || (isFile(path) && sha1.toLowerCase(Locale.ENGLISH).equals(getFileSHA1(path)));
+        if (!isFile(path)) {
+            return false;
+        }
+        if(sha1 == null || sha1.equals("")) {
+            return true;
+        }
+        return sha1.toLowerCase(Locale.ENGLISH).equals(getFileSHA1(path));
     }
 
     static boolean isFile(Path path) {
