@@ -181,6 +181,10 @@ public interface IFileDetector {
             for (Map.Entry<String, Path> entry : libsMap.entrySet()) {
                 String sha1 = "";
                 String entryKey = entry.getKey();
+                // NOTE: only used on servers, it's busted
+                if(entryKey.equals("MC_UNPACKED")) {
+                    continue;
+                }
                 /**
                  * NOTE: workaround for https://github.com/MultiMC/Launcher/issues/4400
                  * We ignore the hash of the client file and instead just rely on it being 'correct, maybe' if it's present at all
@@ -196,7 +200,7 @@ public interface IFileDetector {
                 }
             }
             return checked;
-            }
+        }
         // Skip installing process if installer profile doesn't exist.
         return true;
     }
