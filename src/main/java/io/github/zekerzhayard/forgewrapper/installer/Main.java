@@ -1,5 +1,6 @@
 package io.github.zekerzhayard.forgewrapper.installer;
 
+import cpw.mods.modlauncher.ClassTransformer;
 import java.io.File;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -10,7 +11,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import cpw.mods.modlauncher.Launcher;
 import io.github.zekerzhayard.forgewrapper.installer.detector.DetectorLoader;
 import io.github.zekerzhayard.forgewrapper.installer.detector.IFileDetector;
 import io.github.zekerzhayard.forgewrapper.installer.util.ModuleUtil;
@@ -47,7 +47,7 @@ public class Main {
 
         try (URLClassLoader ucl = URLClassLoader.newInstance(new URL[] {
             Main.class.getProtectionDomain().getCodeSource().getLocation(),
-            Launcher.class.getProtectionDomain().getCodeSource().getLocation(),
+            ClassTransformer.class.getProtectionDomain().getCodeSource().getLocation(),
             installerJar.toUri().toURL()
         }, ModuleUtil.getPlatformClassLoader())) {
             Class<?> installer = ucl.loadClass("io.github.zekerzhayard.forgewrapper.installer.Installer");

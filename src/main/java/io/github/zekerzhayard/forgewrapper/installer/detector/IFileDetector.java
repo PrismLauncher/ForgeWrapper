@@ -4,8 +4,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-
-import cpw.mods.modlauncher.Launcher;
+import cpw.mods.modlauncher.ClassTransformer;
 
 public interface IFileDetector {
     /**
@@ -29,7 +28,7 @@ public interface IFileDetector {
             return Paths.get(libraryDir).toAbsolutePath();
         }
         try {
-            Path launcher = Paths.get(Launcher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+            Path launcher = Paths.get(ClassTransformer.class.getProtectionDomain().getCodeSource().getLocation().toURI());
 
             while (!launcher.getFileName().toString().equals("libraries")) {
                 launcher = launcher.getParent();
